@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using NBitcoin;
 using NBitcoin.Crypto;
@@ -22,9 +21,10 @@ namespace NBXplorer.DerivationStrategy
 		public bool Segwit
 		{
 			get;
+			set;
 		}
 
-		protected internal override string StringValueCore
+		protected override string StringValue
 		{
 			get
 			{
@@ -38,12 +38,11 @@ namespace NBXplorer.DerivationStrategy
 			}
 		}
 
-		public DirectDerivationStrategy(BitcoinExtPubKey root, bool segwit, ReadOnlyDictionary<string, bool> additionalOptions = null) : base(additionalOptions)
+		public DirectDerivationStrategy(BitcoinExtPubKey root)
 		{
 			if(root == null)
 				throw new ArgumentNullException(nameof(root));
 			_Root = root;
-			Segwit = segwit;
 		}
 		public override Derivation GetDerivation()
 		{
@@ -53,7 +52,7 @@ namespace NBXplorer.DerivationStrategy
 
 		public override DerivationStrategyBase GetChild(KeyPath keyPath)
 		{
-			return new DirectDerivationStrategy(_Root.ExtPubKey.Derive(keyPath).GetWif(_Root.Network), Segwit, AdditionalOptions);
+			return new DirectDerivationStrategy(_Root.ExtPubKey.Derive(keyPath).GetWif(_Root.Network)) { Segwit = Segwit };
 		}
 
 		public override IEnumerable<ExtPubKey> GetExtPubKeys()

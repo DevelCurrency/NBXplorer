@@ -11,11 +11,13 @@ namespace NBXplorer
 {
 	public class NBXplorerNetwork
 	{
-		internal NBXplorerNetwork(INetworkSet networkSet, NetworkType networkType)
+		public NBXplorerNetwork(INetworkSet networkSet, NetworkType networkType,
+			DerivationStrategyFactory derivationStrategyFactory = null)
 		{
 			NBitcoinNetwork = networkSet.GetNetwork(networkType);
 			CryptoCode = networkSet.CryptoCode;
 			DefaultSettings = NBXplorerDefaultSettings.GetDefaultSettings(networkType);
+			DerivationStrategyFactory = derivationStrategyFactory;
 		}
 		public Network NBitcoinNetwork
 		{
@@ -37,11 +39,6 @@ namespace NBXplorer
 		{
 			get;
 			private set;
-		}
-
-		internal virtual DerivationStrategyFactory CreateStrategyFactory()
-		{
-			return new DerivationStrategy.DerivationStrategyFactory(NBitcoinNetwork);
 		}
 
 		public DerivationStrategy.DerivationStrategyFactory DerivationStrategyFactory

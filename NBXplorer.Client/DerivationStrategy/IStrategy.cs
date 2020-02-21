@@ -2,8 +2,6 @@
 using NBitcoin.Crypto;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace NBXplorer.DerivationStrategy
@@ -17,12 +15,9 @@ namespace NBXplorer.DerivationStrategy
 	}
 	public abstract class DerivationStrategyBase : IHDScriptPubKey
 	{
-		ReadOnlyDictionary<string, bool> Empty = new ReadOnlyDictionary<string, bool>(new Dictionary<string, bool>(0));
-		public ReadOnlyDictionary<string, bool> AdditionalOptions { get; }
-
-		internal DerivationStrategyBase(ReadOnlyDictionary<string,bool> additionalOptions)
+		internal DerivationStrategyBase()
 		{
-			AdditionalOptions = additionalOptions ?? Empty;
+
 		}
 
 		public DerivationLine GetLineFor(KeyPathTemplate keyPathTemplate)
@@ -43,32 +38,11 @@ namespace NBXplorer.DerivationStrategy
 		}
 		public abstract Derivation GetDerivation();
 
-		protected internal abstract string StringValueCore
+		protected abstract string StringValue
 		{
 			get;
 		}
 
-		string _StringValue;
-		string StringValue
-		{
-			get
-			{
-				if (_StringValue == null)
-				{
-					if (AdditionalOptions.Count == 0)
-						_StringValue = StringValueCore;
-					else
-						_StringValue = $"{StringValueCore}{GetSuffixOptionsString()}";
-				}
-				return _StringValue;
-			}
-		}
-
-		private string GetSuffixOptionsString()
-		{
-			return string.Join("", new SortedDictionary<string, bool>(AdditionalOptions).Where(pair => pair.Value).Select(pair => $"-[{pair.Key}]"));
-		}
-		
 		public override bool Equals(object obj)
 		{
 			DerivationStrategyBase item = obj as DerivationStrategyBase;

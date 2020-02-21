@@ -10,7 +10,7 @@ namespace NBXplorer.DerivationStrategy
 {
 	public class P2WSHDerivationStrategy : DerivationStrategyBase
 	{
-		internal P2WSHDerivationStrategy(DerivationStrategyBase inner):base(inner.AdditionalOptions)
+		internal P2WSHDerivationStrategy(DerivationStrategyBase inner)
 		{
 			if(inner == null)
 				throw new ArgumentNullException(nameof(inner));
@@ -22,7 +22,7 @@ namespace NBXplorer.DerivationStrategy
 			get; set;
 		}
 
-		protected internal override string StringValueCore => Inner.ToString();
+		protected override string StringValue => Inner.ToString();
 
 		public override Derivation GetDerivation()
 		{

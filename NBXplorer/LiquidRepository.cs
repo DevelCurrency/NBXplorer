@@ -8,7 +8,6 @@ using NBXplorer.Altcoins.Liquid;
 using NBitcoin.RPC;
 using NBXplorer.Models;
 using System;
-using NBXplorer.DerivationStrategy;
 
 namespace NBXplorer
 {
@@ -186,7 +185,6 @@ namespace NBXplorer
 		{
 			await base.AfterMatch(tx, keyInfos);
 			if (tx.TrackedSource is DerivationSchemeTrackedSource ts &&
-			    !ts.DerivationStrategy.Unblinded() && 
 				tx.Transaction is ElementsTransaction elementsTransaction &&
 				tx is ElementsTrackedTransaction elementsTracked)
 			{

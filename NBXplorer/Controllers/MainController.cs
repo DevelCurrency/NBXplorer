@@ -924,7 +924,8 @@ namespace NBXplorer.Controllers
 			var buffer = new MemoryStream();
 			await Request.Body.CopyToAsync(buffer);
 			buffer.Position = 0;
-			tx.FromBytes(buffer.ToArrayEfficient());
+			var stream = new BitcoinStream(buffer, false);
+			tx.ReadWrite(stream);
 
 			var waiter = this.Waiters.GetWaiter(network);
 			var repo = RepositoryProvider.GetRepository(network);
@@ -943,7 +944,6 @@ namespace NBXplorer.Controllers
 					};
 				}
 				await waiter.RPC.SendRawTransactionAsync(tx);
-				await waiter.GetExplorerBehavior()?.SaveMatches(tx);
 				return new BroadcastResult(true);
 			}
 			catch (RPCException ex) when (!testMempoolAccept)
@@ -970,7 +970,6 @@ namespace NBXplorer.Controllers
 					{
 						await waiter.RPC.SendRawTransactionAsync(tx);
 						Logs.Explorer.LogInformation($"{network.CryptoCode}: Broadcast success");
-						await waiter.GetExplorerBehavior()?.SaveMatches(tx);
 						return new BroadcastResult(true);
 					}
 					catch (RPCException)

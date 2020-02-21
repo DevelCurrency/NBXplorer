@@ -7,7 +7,6 @@ using System.Text;
 using System.IO;
 using NBitcoin.Crypto;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 
 namespace NBXplorer.DerivationStrategy
 {
@@ -15,22 +14,22 @@ namespace NBXplorer.DerivationStrategy
 	{
 		public bool LexicographicOrder
 		{
-			get;
+			get; set;
 		}
 
 		public int RequiredSignatures
 		{
-			get;
+			get; set;
 		}
 
 		static readonly Comparer<PubKey> LexicographicComparer = Comparer<PubKey>.Create((a, b) => Comparer<string>.Default.Compare(a?.ToHex(), b?.ToHex()));
 
-		public ReadOnlyCollection<BitcoinExtPubKey> Keys
+		public BitcoinExtPubKey[] Keys
 		{
-			get;
+			get; set;
 		}
 
-		protected internal override string StringValueCore
+		protected override string StringValue
 		{
 			get
 			{
@@ -50,18 +49,17 @@ namespace NBXplorer.DerivationStrategy
 			}
 		}
 
-		internal MultisigDerivationStrategy(int reqSignature, BitcoinExtPubKey[] keys, bool isLegacy, bool lexicographicOrder,
-			ReadOnlyDictionary<string, bool> additionalOptions) : base(additionalOptions)
+		internal MultisigDerivationStrategy(int reqSignature, BitcoinExtPubKey[] keys, bool isLegacy)
 		{
-			Keys = new ReadOnlyCollection<BitcoinExtPubKey>(keys);
+			Keys = keys;
 			RequiredSignatures = reqSignature;
-			LexicographicOrder = lexicographicOrder;
+			LexicographicOrder = true;
 			IsLegacy = isLegacy;
 		}
 
 		public bool IsLegacy
 		{
-			get;
+			get; private set;
 		}
 
 		private void WriteBytes(MemoryStream ms, byte[] v)
@@ -71,7 +69,7 @@ namespace NBXplorer.DerivationStrategy
 
 		public override Derivation GetDerivation()
 		{
-			var pubKeys = new PubKey[this.Keys.Count];
+			var pubKeys = new PubKey[this.Keys.Length];
 			Parallel.For(0, pubKeys.Length, i =>
 			{
 				pubKeys[i] = this.Keys[i].ExtPubKey.PubKey;
@@ -86,7 +84,10 @@ namespace NBXplorer.DerivationStrategy
 
 		public override DerivationStrategyBase GetChild(KeyPath keyPath)
 		{
-			return new MultisigDerivationStrategy(RequiredSignatures, Keys.Select(k => k.ExtPubKey.Derive(keyPath).GetWif(k.Network)).ToArray(), IsLegacy, LexicographicOrder, AdditionalOptions);
+			return new MultisigDerivationStrategy(RequiredSignatures, Keys.Select(k => k.ExtPubKey.Derive(keyPath).GetWif(k.Network)).ToArray(), IsLegacy)
+			{
+				LexicographicOrder = LexicographicOrder
+			};
 		}
 
 		public override IEnumerable<ExtPubKey> GetExtPubKeys()

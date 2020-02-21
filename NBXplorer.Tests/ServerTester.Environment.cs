@@ -8,7 +8,6 @@ namespace NBXplorer.Tests
 {
     public partial class ServerTester
     {
-		NBXplorerNetworkProvider _Provider = new NBXplorerNetworkProvider(NetworkType.Regtest);
 		private void SetEnvironment()
 		{
 			//CryptoCode = "LTC";
@@ -78,11 +77,11 @@ namespace NBXplorer.Tests
 
 			//CryptoCode = "LBTC";
 			//nodeDownloadData = NodeDownloadData.Elements.v0_18_1_1;
-			//NBXplorerNetwork = _Provider.GetLBTC();
+			//NBXplorerNetwork = new NBXplorerNetwork(NBitcoin.Altcoins.Liquid.Instance, NetworkType.Regtest);
 			//
 			CryptoCode = "BTC";
 			nodeDownloadData = NodeDownloadData.Bitcoin.v0_19_0_1;
-			NBXplorerNetwork = _Provider.GetBTC();
+			NBXplorerNetwork = new NBXplorerNetwork(Network.RegTest.NetworkSet, NetworkType.Regtest);
 		}
 	}
 }

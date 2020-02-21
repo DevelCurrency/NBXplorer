@@ -12,33 +12,23 @@ namespace NBXplorer
 	{
 		public class LiquidNBXplorerNetwork : NBXplorerNetwork
 		{
-			internal LiquidNBXplorerNetwork(INetworkSet networkSet, NetworkType networkType) : base(networkSet, networkType)
+			public LiquidNBXplorerNetwork(INetworkSet networkSet, NetworkType networkType, DerivationStrategyFactory derivationStrategyFactory = null) : base(networkSet, networkType, derivationStrategyFactory)
 			{
 			}
-
-			internal override DerivationStrategyFactory CreateStrategyFactory()
-			{
-				var factory = base.CreateStrategyFactory();
-				factory.AuthorizedOptions.Add("unblinded");
-				return factory;
-			}
-
+			
 			public override BitcoinAddress CreateAddress(DerivationStrategyBase derivationStrategy, KeyPath keyPath, Script scriptPubKey)
 			{
-				if (derivationStrategy.Unblinded())
+				var blindingKey = GenerateBlindingKey(derivationStrategy, keyPath);
+				if (blindingKey == null)
 				{
 					return base.CreateAddress(derivationStrategy, keyPath, scriptPubKey);
 				}
-				var blindingPubKey = GenerateBlindingKey(derivationStrategy, keyPath).PubKey;
+				var blindingPubKey = blindingKey.PubKey;
 				return new BitcoinBlindedAddress(blindingPubKey, base.CreateAddress(derivationStrategy, keyPath, scriptPubKey));
 			}
 
 			public static Key GenerateBlindingKey(DerivationStrategyBase derivationStrategy, KeyPath keyPath)
 			{
-				if (derivationStrategy.Unblinded())
-				{
-					throw new InvalidOperationException("This derivation scheme is set to only track unblinded addresses");
-				}
 				var blindingKey = new Key(derivationStrategy.GetChild(keyPath).GetChild(new KeyPath("0")).GetDerivation()
 					.ScriptPubKey.WitHash.ToBytes());
 				return blindingKey;
@@ -56,14 +46,6 @@ namespace NBXplorer
 		public NBXplorerNetwork GetLBTC()
 		{
 			return GetFromCryptoCode(NBitcoin.Altcoins.Liquid.Instance.CryptoCode);
-		}
-	}
-	
-	public static class LiquidDerivationStrategyOptionsExtensions
-	{
-		public static bool Unblinded(this DerivationStrategyBase derivationStrategyBase)
-		{
-			return derivationStrategyBase.AdditionalOptions.TryGetValue("unblinded", out var unblinded) is true && unblinded;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -8,9 +8,9 @@
 		<Description>Client API for the minimalist HD Wallet Tracker NBXplorer</Description>
 		<PackageIconUrl>https://aois.blob.core.windows.net/public/Bitcoin.png</PackageIconUrl>
 		<PackageTags>bitcoin</PackageTags>
-		<PackageProjectUrl></PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/DevelCurrency/NBXplorer</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl></RepositoryUrl>
+		<RepositoryUrl>https://github.com/DevelCurrency/NBXplorer</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<LangVersion>8.0</LangVersion>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>

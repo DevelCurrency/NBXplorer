@@ -24,11 +24,12 @@ namespace NBXplorer
 			InitMonoeci(networkType);
 			InitGobyte(networkType);
 			InitColossus(networkType);
+			InitBuyCoinPos(networkType);
 			InitChaincoin(networkType);
 			InitLiquid(networkType);
 			foreach (var chain in _Networks.Values)
 			{
-				chain.DerivationStrategyFactory ??= chain.CreateStrategyFactory();
+				chain.DerivationStrategyFactory ??= new DerivationStrategy.DerivationStrategyFactory(chain.NBitcoinNetwork);
 			}
 		}
 
