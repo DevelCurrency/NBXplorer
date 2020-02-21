@@ -1,23 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Company>Digital Garage</Company>
-		<Version>3.0.3</Version>
+		<Company>DevelCurrency</Company>
+		<Version>3.0.2</Version>
 		<Copyright>Copyright © Digital Garage 2017</Copyright>
 		<Description>Client API for the minimalist HD Wallet Tracker NBXplorer</Description>
 		<PackageIconUrl>https://aois.blob.core.windows.net/public/Bitcoin.png</PackageIconUrl>
 		<PackageTags>bitcoin</PackageTags>
-		<PackageProjectUrl>https://github.com/dgarage/NBXplorer/</PackageProjectUrl>
+		<PackageProjectUrl></PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/dgarage/NBXplorer/</RepositoryUrl>
+		<RepositoryUrl></RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<LangVersion>8.0</LangVersion>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <AssemblyName>NBXplorer.Client</AssemblyName>
+    <PackageId>NBXplorer.Client.DevelCurrency</PackageId>
+    <Authors>NBXplorer.Client.DevelCurrency</Authors>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NBitcoin.DevelCurreny" Version="5.0.15" />
-		<PackageReference Include="NBitcoin.Altcoins.DevelCurrency" Version="2.0.5.3" />
+		<PackageReference Include="NBitcoin.Altcoins.DevelCurrency" Version="2.0.5.4" />
+		<PackageReference Include="NBitcoin.DevelCurreny" Version="5.0.16" />
 		<PackageReference Include="NicolasDorier.StandardConfiguration" Version="1.0.0.18" />
 		<PackageReference Include="System.Net.WebSockets.Client" Version="4.3.2" />
 	</ItemGroup>
